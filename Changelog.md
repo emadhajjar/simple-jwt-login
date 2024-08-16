@@ -1,7 +1,19 @@
 # Changelog - Releases
 
 ## Unreleased
+
+## 3.5.6 (03 Aug 2024)
+- Update WordPress 6.6 Compatibility
+- Fix revoked token validation when middleware enabled [#110](https://github.com/nicumicle/simple-jwt-login/issues/110)
+
+## 3.5.5 ( 04 May 2024)
+- Update README 
+- Refactor Protect Endpoints
+
+## 3.5.4 ( 03 May 2024)
 - Add OAuth support for Google [#97](https://github.com/nicumicle/simple-jwt-login/issues/97)
+- Fix status code for expired tokens [#102](https://github.com/nicumicle/simple-jwt-login/issues/102)
+- Update WordPress 6.5 Compatibility
 
 ## 3.5.3 (16 November 2023) 
 - Fix licence in composer.json

@@ -2,6 +2,7 @@
 
 use SimpleJWTLogin\Helpers\CorsHelper;
 use SimpleJWTLogin\Helpers\ServerHelper;
+use SimpleJWTLogin\Helpers\StatusCodeHelper;
 use SimpleJWTLogin\Libraries\ParseRequest;
 use SimpleJWTLogin\Modules\SimpleJWTLoginHooks;
 use SimpleJWTLogin\Services\ProtectEndpointService;
@@ -82,15 +83,16 @@ add_action('rest_api_init', function () {
                         ->loginUser(
                             $routeService->getUserFromJwt($jwt)
                         );
-                } catch (\Exception $e) {
+                } catch (\Exception $exception) {
                     @header('Content-Type: application/json; charset=UTF-8');
+
                     wp_send_json_error(
                         [
-                        'message'   => $e->getMessage(),
-                        'errorCode' => $e->getCode(),
+                        'message'   => $exception->getMessage(),
+                        'errorCode' => $exception->getCode(),
                         'type'      => 'simple-jwt-login-middleware'
                         ],
-                        400
+                        StatusCodeHelper::getStatusCodeFromExeption($exception, 400)
                     );
                     return false;
                 }
@@ -105,6 +107,7 @@ add_action('rest_api_init', function () {
             $service = new ProtectEndpointService();
             $service
                 ->withRequest($request)
+                ->withRequestMethod($serverHelper->getRequestMethod())
                 ->withSettings($jwtSettings)
                 ->withServerHelper($serverHelper)
                 ->withRouteService($routeService);
@@ -178,14 +181,14 @@ add_action('rest_api_init', function () {
                             $service->withSession($_SESSION);
                         }
                         return $service->makeAction();
-                    } catch (Exception $e) {
+                    } catch (Exception $exception) {
                         @header('Content-Type: application/json; charset=UTF-8');
                         wp_send_json_error(
                             [
-                            'message'   => $e->getMessage(),
-                            'errorCode' => $e->getCode()
+                            'message'   => $exception->getMessage(),
+                            'errorCode' => $exception->getCode()
                             ],
-                            400
+                            StatusCodeHelper::getStatusCodeFromExeption($exception, 400)
                         );
 
                         return false;
